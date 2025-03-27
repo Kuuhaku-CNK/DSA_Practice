@@ -36,13 +36,13 @@ int main(){
     }
     quicksor(a,0,n-1);
     int x = 0;
-    a.erase(unique(a.begin(),a.end()),a.end());
-    n = a.size();
-    for (int i = 0; i < n; i++){
-        if (a[i] != x){
-            cout << x;
-            return 0;
+    for (int i = 0; i < n; i++)
+    {
+        if (a[i] == x){
+            x++;
+        } else if (a[i] > x){
+            break;
         }
-        x++;
     }
+    cout << x;
 }
