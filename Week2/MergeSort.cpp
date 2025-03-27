@@ -3,11 +3,13 @@ using namespace std;
 int n;
 void merge(vector <int> &a, int left, int mid, int right){
     int n1 = mid - left + 1; // số phần tử của mảng đầu tiên
-    int n2 = right - mid;
+    int n2 = right - mid; // số phần tử của mảng thứ hai
     vector <int> L(n1),R(n2);
+    // Dồn phần tử bên trái vào mảng L
     for (int i = 0; i < n1; i++){
         L[i] = a[left + i];
     }
+    // Dồn phần tử bên phải vào mảng R
     for (int j = 0; j < n2; j++)
     {
         R[j] = a[mid + 1 + j];
@@ -15,6 +17,7 @@ void merge(vector <int> &a, int left, int mid, int right){
     int i = 0, j = 0;
     int k = left;
     while (i < n1 && j < n2){
+        // Nếu phần tử bến trái bé hơn phần tử bên phải thì gán vào vị trí k của mảng a
         if (L[i] <= R[j]){
             a[k] = L[i];
             i++;
