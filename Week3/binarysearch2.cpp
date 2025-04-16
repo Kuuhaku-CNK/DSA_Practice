@@ -1,14 +1,62 @@
 #include <bits/stdc++.h>
 using namespace std;
-void find_first_and_last_elements(int n,int min_val,vector <int> &a,vector <int> &first, vector <int> &last){
-    for (int i = 0; i < n; i++)
-    {
-        int normalize = a[i] - min_val;
-        if (first[normalize] == -1){
-            first[normalize] = i;
+struct type{
+    int x,y;
+};
+bool compare(type a,type b){
+    if (a.x != b.x){
+        return a.x < b.x;
+    } 
+    return a.y < b.y;
+}
+int partition(vector <type> &v, int low, int high) {
+    type pivot = v[high];
+    int i = (low - 1);
+    for (int j = low; j <= high - 1; j++) {
+        if (compare(v[j],pivot)) {
+            i++;
+            swap(v[i], v[j]);
         }
-        last[normalize] = i;
     }
+    swap(v[i + 1], v[high]);
+    return (i + 1);
+}
+void sap_xep(vector<type> &v, int low, int high) {
+    if (low < high) {
+        int pi = partition(v, low, high);
+        sap_xep(v, low, pi - 1);
+        sap_xep(v, pi + 1, high);
+    }
+}
+int binary_search_first(vector <type> &v,int target,int left,int right){
+    int ans = -2;
+    while (left <= right){
+        int mid = left + (right - left)/2;
+        if (v[mid].x == target){
+            ans = v[mid].y;
+            right = mid - 1;
+        } else if (v[mid].x < target) {
+            left = mid + 1;
+        } else {
+            right = mid - 1;
+        }
+    }
+    return ans;
+}
+int binary_search_last(vector <type> &v,int target,int left,int right){
+    int ans = -2;
+    while (left <= right){
+        int mid = left + (right - left)/2;
+        if (v[mid].x == target){
+            ans = v[mid].y;
+            left = mid + 1;
+        } else if (v[mid].x < target) {
+            left = mid + 1;
+        } else {
+            right = mid - 1;
+        }
+    }
+    return ans;
 }
 int main(){
     freopen("test.inp","r",stdin);
@@ -17,37 +65,26 @@ int main(){
     cin.tie(NULL);
     int n,q;
     cin >> n >> q;
-    vector <int> a;
+    vector <type> a(n);
     for (int i = 0; i < n; i++)
     {
-        int x;
-        cin >> x;
-        a.push_back(x);
+        cin >> a[i].x;
+        a[i].y = i;
     }
-    int max_val = *max_element(a.begin(),a.end());
-    int min_val = *min_element(a.begin(),a.end());
-    int range = max_val - min_val + 1;
-    vector <int> first(range,-1);
-    vector <int> last(range,-1);
-    find_first_and_last_elements(n,min_val,a,first,last);
+    sap_xep(a,0,n-1);
+    // for (int i = 0; i < n; i++)
+    // {
+    //     cout << a[i].x << " " << a[i].y << endl;
+    // }
     for (int i = 0; i < q; i++)
     {
         string s;
-        int x,y;
-        cin >> s >> x >> y;
-        y = y - min_val;
-        if (x == 1){
-            if (first[y] != -1){
-                cout << first[y] + 1<< endl;
-            } else {
-                cout << - 1 << endl;
-            }
+        int c,v;
+        cin >> s >> c >> v;
+        if (c == 1){
+            cout << binary_search_first(a,v,0,n-1) + 1 << endl;
         } else {
-            if (last[y] != -1){
-                cout << last[y] + 1 << endl;
-            } else {
-                cout << -1 << endl;
-            }
+            cout << binary_search_last(a,v,0,n-1) + 1 << endl;
         }
     }
     
